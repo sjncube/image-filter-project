@@ -19,6 +19,7 @@ You'll need to create a new node server. Open a new terminal within the project 
 
 ### Create a new endpoint in the server.ts file
 
+Endpoint : http://udagramncubedev-dev.us-west-2.elasticbeanstalk.com/
 The starter code has a task for you to complete an endpoint in `./src/server.ts` which uses query parameter to download an image from a public URL, filter the image, and return the result.
 
 We've included a few helper functions to handle some of these concepts and we're importing it for you at the top of the `./src/server.ts`  file.
@@ -46,4 +47,4 @@ Prevent requests without valid authentication headers.
 
 Add your own domain name and have it point to the running services (try adding a subdomain name to point to the processing server)
 > !NOTE: Domain names are not included in AWS’ free tier and will incur a cost.
-# image-filter-project
+
