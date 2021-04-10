@@ -1,5 +1,4 @@
-import express from 'express';
-import {Request, Response } from 'express';
+import express, { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -29,38 +28,27 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    let { image_url } = req.query;
+    if (!image_url) {
+      return res.status(400).send({ message: 'Image url is required!!!' });
+    }
+    await filterImageFromURL(image_url).then(filteredimagePath => {
+      if (!filteredimagePath) {
+        return res.status(400).send({ message: 'An error occurred, image not filtered' })
+      }
+      return res.status(200).sendFile(filteredimagePath, () => {
+        deleteLocalFiles([filteredimagePath])
+      })
+    })
+  })
   //! END @TODO1
-  app.get("/filteredimage", async (req:Request, res:Response) => {
-    const { image_url } = req.query;
-    if (!image_url.trim()) {
-      res.status(502).send("image url is required"
-      );
-    }
-    else {
-      filterImageFromURL(encodeURI(image_url)).then(
-        (path) => {
-          res.status(200).sendFile(path, (err) => {
-            if (!err) {
-              deleteLocalFiles([path]);
-            } else {
-              res.status(500).send(err)
-            }
-          });
-        }
-      ).catch(
-        (err) => {
-          res.status(500).send(err);
-        }
-        );
-    }
-  });
+  
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
-  
 
   // Start the Server
   app.listen( port, () => {
